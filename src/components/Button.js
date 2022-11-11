@@ -1,5 +1,5 @@
-export const Button = ({setVisibleField}) => {
+export const Button = ({handleButton}) => {
   return(
-    <button className="button" type="button" onClick={() => setVisibleField(true)}>Start Game</button>
+    <button className="button" type="button" onClick={handleButton}>Start Game</button>
   )
 }

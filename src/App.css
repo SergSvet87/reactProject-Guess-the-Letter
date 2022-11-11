@@ -47,11 +47,19 @@ h1 {
 .notification {
   color: #3c3c3c;
   font-size: 24px;
-  padding: 50px 5px;
+  padding: 10px;
+}
+
+.notification-item {
+  margin: 35px;
 }
 
 .notification-item.yes {
-  margin-bottom: 40px;
+  color: rgb(30, 255, 0);
+}
+
+.notification-item.no {
+  color: orangered;
 }
 
 .button {
