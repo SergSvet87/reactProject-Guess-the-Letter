@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/reactProject-Guess-the-Letter/static/css/main.6c531361.css",
-    "main.js": "/reactProject-Guess-the-Letter/static/js/main.d28fd484.js",
+    "main.css": "/reactProject-Guess-the-Letter/static/css/main.72b00fb6.css",
+    "main.js": "/reactProject-Guess-the-Letter/static/js/main.6606db30.js",
     "index.html": "/reactProject-Guess-the-Letter/index.html",
-    "main.6c531361.css.map": "/reactProject-Guess-the-Letter/static/css/main.6c531361.css.map",
-    "main.d28fd484.js.map": "/reactProject-Guess-the-Letter/static/js/main.d28fd484.js.map"
+    "main.72b00fb6.css.map": "/reactProject-Guess-the-Letter/static/css/main.72b00fb6.css.map",
+    "main.6606db30.js.map": "/reactProject-Guess-the-Letter/static/js/main.6606db30.js.map"
   },
   "entrypoints": [
-    "static/css/main.6c531361.css",
-    "static/js/main.d28fd484.js"
+    "static/css/main.72b00fb6.css",
+    "static/js/main.6606db30.js"
   ]
 }
