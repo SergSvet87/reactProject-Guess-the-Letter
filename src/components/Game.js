@@ -19,30 +19,41 @@ const getEmptyState = () =>
 
 export const Game = () => {
 
-  const [visibleLetter, setVisibleLetter] = React.useState(false)
+  const [selectLetter, setSelectLetter] = React.useState(LETTERS[0])
   const [visibleField, setVisibleField] = React.useState(false)
   const [visibleNotificationYes, setVisibleNotificationYes] = React.useState(false)
   const [visibleNotificationNo, setVisibleNotificationNo] = React.useState(false)
 
-  const [letters, setIsActiveLetter] = React.useState(LETTERS)
   const [board, setBoard] = React.useState(getEmptyState());
 
+  console.log(selectLetter);
 
-  const boardRef = React.useRef(board)
+  // const boardRef = React.useRef(board)
 
-  const handlePressed = (letter) => {
+  const handlePressed = (event) => {
+    let getCurrentLetter = selectLetter.toLowerCase()
+    console.log(getCurrentLetter);
+
+    let getCurrentValueCell = event.target.textContent.toLowerCase()
     setBoard((prev) => {
       const newBoard = [...prev];
 
       const newBoardFlat = newBoard.flat();
 
-      const nextCell = newBoardFlat.find(
-        (element) => element.letter === ""
+      let currentCell = newBoardFlat.findIndex(
+        (element) => {
+          if (getCurrentValueCell === getCurrentLetter) {
+            setVisibleNotificationYes(true)
+            currentCell = getCurrentValueCell
+            return newBoard;
+          } else {
+            setVisibleNotificationNo(true)
+            currentCell = getCurrentValueCell
+            return newBoard;
+          }
+        }
       );
-
-      nextCell.letter = letter;
-
-      return newBoard;
+      console.log(currentCell);
     });
   };
 
@@ -53,38 +64,14 @@ export const Game = () => {
   //   console.log(currentLetter);
   // }
 
-  // const chooseLetter = (e) => {
-  //   const button = e.target
-  //   console.log(button);
-  //   if (button) {
-  //     button.button = setVisibleLetter(true);
-  //   }
-  // }
 
-  React.useEffect(() => {
-    const handleBtn = (e) => {
-      chooseLetter(e.target);
-      const button = e.target
-      if (button) {
-        setVisibleLetter(true)
-      }
-    };
+  // React.useEffect(() => {
 
-    document.addEventListener("keypress", handleBtn);
-    return () => {
-      document.removeEventListener("keypress", handleBtn);
-    };
-  }, []);
-
-  const chooseLetter = (e) => {
-    setIsActiveLetter(() => {
-
-      const button = e.target.dataset.item
-      if (button === 0) {
-        button.add.className = 'show'
-      }
-    })
-  }
+  //   document.addEventListener("keypress", handleBtn);
+  //   return () => {
+  //     document.removeEventListener("keypress", handleBtn);
+  //   };
+  // }, []);
 
   const handleButton = () => {
     setVisibleField(true)
@@ -92,13 +79,14 @@ export const Game = () => {
 
   return (
     <main className="game">
-      <LetterBoard letters={letters}
-        visibleLetter={visibleLetter}
-        chooseLetter={chooseLetter} />
+      <LetterBoard letters={LETTERS}
+        selectLetter={selectLetter}
+        setSelectLetter={setSelectLetter}
+      />
 
       <GameField board={board}
         visibleField={visibleField}
-        handlePressed={() => handlePressed}
+        handlePressed={handlePressed}
         visibleNotificationYes={visibleNotificationYes}
         visibleNotificationNo={visibleNotificationNo} />
 
