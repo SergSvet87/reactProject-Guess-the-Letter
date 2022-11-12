@@ -1,5 +1,5 @@
-export const Button = ({handleButton}) => {
+export const Button = ({handleButton, buttonName}) => {
   return(
-    <button className="button" type="button" onClick={handleButton}>Start Game</button>
+    <button className="button" type="button" onClick={() => handleButton()}>{buttonName}</button>
   )
 }

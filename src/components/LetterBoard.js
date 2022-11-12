@@ -6,7 +6,7 @@ export const LetterBoard = ({ letters, selectLetter, setSelectLetter }) => {
       {letters.map((letter, indexBtn) => (
         <li className="letter" key={indexBtn}>
           <button
-            className={selectLetter === letter && 'show'}
+            className={selectLetter === letter ? 'show' : ''}
             data-item={indexBtn}
             onClick={() => setSelectLetter(letter)}
             type="button"

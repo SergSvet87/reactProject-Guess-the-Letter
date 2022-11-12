@@ -4,11 +4,14 @@ import { LetterBoard } from "./LetterBoard"
 import { GameField } from "./GameField"
 import { Button } from "./Button"
 
-import { range } from "../utils/array";
+import { range } from "../utils/array"
+import getRandomLetter from "../utils/getRandomLetter"
 
-const COLUMNS = 3;
-const ROWS = 3;
+const COLUMNS = 3
+const ROWS = 3
 const LETTERS = ["a", "b", "c"]
+const DELAY = 5000
+const BUTTON_NAME = "Start Game"
 
 const getEmptyState = () =>
   range(ROWS).map((row) =>
@@ -21,59 +24,60 @@ export const Game = () => {
 
   const [selectLetter, setSelectLetter] = React.useState(LETTERS[0])
   const [visibleField, setVisibleField] = React.useState(false)
+  const [hide, setHide] = React.useState(false)
   const [visibleNotificationYes, setVisibleNotificationYes] = React.useState(false)
   const [visibleNotificationNo, setVisibleNotificationNo] = React.useState(false)
-
   const [board, setBoard] = React.useState(getEmptyState());
 
-  console.log(selectLetter);
 
-  // const boardRef = React.useRef(board)
+  const handlePressed = (letter, event) => {
+    setVisibleNotificationNo(false)
+    setVisibleNotificationYes(false)
 
-  const handlePressed = (event) => {
-    let getCurrentLetter = selectLetter.toLowerCase()
-    console.log(getCurrentLetter);
+    let getCurrentLetter = selectLetter.toUpperCase()
+    const selectedLetter = letter.letter;
+    // setBoard((prev) => {
+    //   const newBoard = [...prev];
+    //   const newBoardFlat = newBoard.flat();
 
-    let getCurrentValueCell = event.target.textContent.toLowerCase()
-    setBoard((prev) => {
-      const newBoard = [...prev];
-
-      const newBoardFlat = newBoard.flat();
-
-      let currentCell = newBoardFlat.findIndex(
-        (element) => {
-          if (getCurrentValueCell === getCurrentLetter) {
+    //   newBoardFlat.map(
+    //     (element) => {
+          if (selectedLetter.toUpperCase() === getCurrentLetter) {
             setVisibleNotificationYes(true)
-            currentCell = getCurrentValueCell
-            return newBoard;
+            letter = selectedLetter.toUpperCase()
+            setHide(false)
           } else {
             setVisibleNotificationNo(true)
-            currentCell = getCurrentValueCell
-            return newBoard;
+            letter = selectedLetter.toUpperCase()
+            setHide(false)
           }
-        }
-      );
-      console.log(currentCell);
-    });
+      //   }
+      // );
+    //   console.log(newBoard);
+    //   return newBoard
+    // });
   };
 
-  // const clickHandler = (event) => {
-  //   let currentCell = event.target
-  //   let currentLetter = currentCell.textContent
-
-  //   console.log(currentLetter);
-  // }
-
-
-  // React.useEffect(() => {
-
-  //   document.addEventListener("keypress", handleBtn);
-  //   return () => {
-  //     document.removeEventListener("keypress", handleBtn);
-  //   };
-  // }, []);
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setHide(true)
+    }, DELAY);
+    return () => clearTimeout(timer)
+  }, [])
 
   const handleButton = () => {
+    setBoard((prev) => {
+      const newBoard = [...prev];
+      const newBoardFlat = newBoard.flat();
+
+      newBoardFlat.map((el) => {
+        setHide(false)
+        el.letter = getRandomLetter()
+      })
+
+      return newBoard
+    });
+
     setVisibleField(true)
   }
 
@@ -86,11 +90,12 @@ export const Game = () => {
 
       <GameField board={board}
         visibleField={visibleField}
-        handlePressed={handlePressed}
+        handlePressed={(letter) => handlePressed(letter)}
+        hide={hide}
         visibleNotificationYes={visibleNotificationYes}
         visibleNotificationNo={visibleNotificationNo} />
 
-      <Button handleButton={handleButton} />
+      <Button handleButton={handleButton} buttonName={BUTTON_NAME} />
     </main >
   )
 }
