@@ -1,6 +1,11 @@
-
-
-export const GameField = ({ board, visibleField, handlePressed, visibleNotificationYes, visibleNotificationNo, hide }) => {
+export const GameField = ({
+  board,
+  visibleField,
+  handlePressed,
+  visibleNotificationYes,
+  visibleNotificationNo,
+  hide
+}) => {
 
   return (
     <div className={`game-field ${visibleField ? 'visible' : ''}`}>

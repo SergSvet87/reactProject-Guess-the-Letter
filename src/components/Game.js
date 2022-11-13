@@ -3,6 +3,7 @@ import React from "react"
 import { LetterBoard } from "./LetterBoard"
 import { GameField } from "./GameField"
 import { Button } from "./Button"
+import { Modal } from "./Modal"
 
 import { range } from "../utils/array"
 import getRandomLetter from "../utils/getRandomLetter"
@@ -12,6 +13,11 @@ const ROWS = 3
 const LETTERS = ["a", "b", "c"]
 const DELAY = 5000
 const BUTTON_NAME = "Start Game"
+const MODAL_TITLE = {
+  all: "✨ You WIN!",
+  half: "I know, you can do better!",
+  less: "Not bad at all, you're a loser!"
+}
 
 const getEmptyState = () =>
   range(ROWS).map((row) =>
@@ -28,39 +34,75 @@ export const Game = () => {
   const [visibleNotificationYes, setVisibleNotificationYes] = React.useState(false)
   const [visibleNotificationNo, setVisibleNotificationNo] = React.useState(false)
   const [board, setBoard] = React.useState(getEmptyState());
+  const [modalShow, setModalShow] = React.useState(false);
+  const [modalTitle, setModalTitle] = React.useState('');
 
+  let countCorrectAnswers = 0
+  let countClicks = 0
 
-  const handlePressed = (letter, event) => {
-    setVisibleNotificationNo(false)
-    setVisibleNotificationYes(false)
+  const gameOver = () => {
 
+    setModalShow(modalShow => !modalShow)
+
+    if (countCorrectAnswers === (COLUMNS * ROWS)) {
+      setModalTitle(MODAL_TITLE.all)
+    } else if (countCorrectAnswers >= 5) {
+      setModalTitle(MODAL_TITLE.half)
+    } else {
+      setModalTitle(MODAL_TITLE.less)
+    }
+  }
+
+  if (countClicks === (COLUMNS * ROWS)) {
+    gameOver()
+  }
+
+  const handlePressed = (letter) => {
     let getCurrentLetter = selectLetter.toUpperCase()
-    const selectedLetter = letter.letter;
-    // setBoard((prev) => {
-    //   const newBoard = [...prev];
-    //   const newBoardFlat = newBoard.flat();
+    let selectedLetter = letter.letter;
 
-    //   newBoardFlat.map(
-    //     (element) => {
-          if (selectedLetter.toUpperCase() === getCurrentLetter) {
-            setVisibleNotificationYes(true)
-            letter = selectedLetter.toUpperCase()
-            setHide(false)
-          } else {
-            setVisibleNotificationNo(true)
-            letter = selectedLetter.toUpperCase()
-            setHide(false)
-          }
-      //   }
+    countCorrectAnswers += countCorrectAnswers + 1
+    countClicks += countClicks++
+    console.log(countClicks);
+
+    setBoard((prev) => {
+      const newBoard = [...prev];
+      // const newBoardFlat = newBoard.flat();
+      // const changeCell = newBoardFlat.find(
+      //   (el) => el.letter = selectedLetter
       // );
-    //   console.log(newBoard);
-    //   return newBoard
-    // });
+
+      if (selectedLetter.toUpperCase() === getCurrentLetter) {
+        setVisibleNotificationYes(visibleNotificationYes => !visibleNotificationYes)
+        // changeCell.letter = selectedLetter
+      } else {
+        setVisibleNotificationNo(visibleNotificationNo => !visibleNotificationNo)
+        // changeCell.letter = selectedLetter
+      }
+
+      setHide(hide => !hide)
+
+      // setVisibleNotificationNo(visibleNotificationNo => visibleNotificationNo)
+      // setVisibleNotificationYes(visibleNotificationYes => visibleNotificationYes)
+
+      return newBoard
+    });
   };
+
+  // React.useEffect(() => {
+  //   const handleCell = (e) => {
+  //     handlePressed(e);
+  //   };
+    
+  //   document.addEventListener("keypress", handleCell);
+  //   return () => {
+  //     document.removeEventListener("keypress", handleCell);
+  //   };
+  // }, [handlePressed]);
 
   React.useEffect(() => {
     const timer = setTimeout(() => {
-      setHide(true)
+      setHide(hide => !hide)
     }, DELAY);
     return () => clearTimeout(timer)
   }, [])
@@ -70,32 +112,44 @@ export const Game = () => {
       const newBoard = [...prev];
       const newBoardFlat = newBoard.flat();
 
-      newBoardFlat.map((el) => {
-        setHide(false)
-        el.letter = getRandomLetter()
-      })
-
+      newBoardFlat.map((el) => el.letter = getRandomLetter())
       return newBoard
     });
 
-    setVisibleField(true)
+    setVisibleField(visibleField => !visibleField)
+  }
+
+  const btnCloseModal = () => {
+    setModalShow(modalShow => modalShow)
   }
 
   return (
     <main className="game">
-      <LetterBoard letters={LETTERS}
+      <LetterBoard
+        letters={LETTERS}
         selectLetter={selectLetter}
         setSelectLetter={setSelectLetter}
       />
 
-      <GameField board={board}
+      <GameField
+        board={board}
         visibleField={visibleField}
         handlePressed={(letter) => handlePressed(letter)}
         hide={hide}
         visibleNotificationYes={visibleNotificationYes}
-        visibleNotificationNo={visibleNotificationNo} />
+        visibleNotificationNo={visibleNotificationNo}
+      />
 
-      <Button handleButton={handleButton} buttonName={BUTTON_NAME} />
+      <Button
+        handleButton={handleButton}
+        buttonName={BUTTON_NAME}
+      />
+
+      <Modal
+        modalShow={modalShow}
+        modalTitle={modalTitle}
+        btnClose={btnCloseModal}
+      />
     </main >
   )
 }

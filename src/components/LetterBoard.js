@@ -1,5 +1,9 @@
 
-export const LetterBoard = ({ letters, selectLetter, setSelectLetter }) => {
+export const LetterBoard = ({
+  letters,
+  selectLetter,
+  setSelectLetter
+}) => {
 
   return (
     <ul className="letters">
